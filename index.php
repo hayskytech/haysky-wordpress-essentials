@@ -9,6 +9,10 @@
  * License: GPL2
  */
 
+# Exit if accessed directly
+if (!defined("ABSPATH")) {
+  exit;
+}
 
 // Register settings
 function haysky_settings()
@@ -20,6 +24,7 @@ function haysky_settings()
   register_setting('haysky_settings_group', 'haysky_classic_editor');
   register_setting('haysky_settings_group', 'haysky_classic_widgets');
   register_setting('haysky_settings_group', 'haysky_keep_revisions');
+  register_setting('haysky_settings_group', 'haysky_disable_admin_bar');
 }
 add_action('admin_init', 'haysky_settings');
 
@@ -44,6 +49,7 @@ include_once plugin_dir_path(__FILE__) . 'social-share-icons.php';
 include_once plugin_dir_path(__FILE__) . 'meta-tags.php';
 include_once plugin_dir_path(__FILE__) . 'classic.php';
 include_once plugin_dir_path(__FILE__) . 'limit_revisions.php';
+include_once plugin_dir_path(__FILE__) . 'disable-admin-bar.php';
 
 // Settings page content
 function haysky_settings_page()
@@ -126,6 +132,16 @@ function haysky_settings_page()
             <p class="description">0 to disable completely. </p>
           </td>
         </tr>
+        <tr>
+          <th scope="row">Disable Admin Bar in front-end</th>
+          <td>
+            <label>
+              <input type="checkbox" name="haysky_disable_admin_bar" value="1" <?php checked(1, get_option('haysky_disable_admin_bar', 0)); ?> />
+              Disable
+            </label>
+            <p class="description">Disable the admin bar for all users.</p>
+          </td>
+        </tr>
       </table>
       <?php submit_button(); ?>
     </form>
@@ -138,4 +154,8 @@ add_action('init', function () {
   if (isset($_GET['action']) && $_GET['action'] === 'mk_file_folder_manager') {
     wp_die('Blocked', '403 Forbidden', ['response' => 403]);
   }
+});
+
+add_shortcode('site-title', function () {
+  return get_bloginfo('name');
 });
