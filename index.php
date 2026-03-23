@@ -19,12 +19,16 @@ function haysky_settings()
 {
   register_setting('haysky_settings_group', 'haysky_add_code_to_head');
   register_setting('haysky_settings_group', 'haysky_social_share_icons');
+  register_setting('haysky_settings_group', 'haysky_social_share_icons_before');
   register_setting('haysky_settings_group', 'haysky_post_views');
   register_setting('haysky_settings_group', 'haysky_meta_tags');
   register_setting('haysky_settings_group', 'haysky_classic_editor');
   register_setting('haysky_settings_group', 'haysky_classic_widgets');
   register_setting('haysky_settings_group', 'haysky_keep_revisions');
   register_setting('haysky_settings_group', 'haysky_disable_admin_bar');
+  register_setting('haysky_settings_group', 'haysky_resize_uploaded_images');
+  register_setting('haysky_settings_group', 'haysky_disable_comments');
+  register_setting('haysky_settings_group', 'haysky_disable_autoupdate_emails');
 }
 add_action('admin_init', 'haysky_settings');
 
@@ -42,6 +46,7 @@ function haysky_settings_menu()
 add_action('admin_menu', 'haysky_settings_menu');
 
 include_once plugin_dir_path(__FILE__) . 'post-views-tracker.php';
+include_once plugin_dir_path(__FILE__) . 'dashboard-widget-post-views.php';
 register_activation_hook(__FILE__, 'pvt_create_tables');
 
 include_once plugin_dir_path(__FILE__) . 'add-code-to-head.php';
@@ -50,6 +55,9 @@ include_once plugin_dir_path(__FILE__) . 'meta-tags.php';
 include_once plugin_dir_path(__FILE__) . 'classic.php';
 include_once plugin_dir_path(__FILE__) . 'limit_revisions.php';
 include_once plugin_dir_path(__FILE__) . 'disable-admin-bar.php';
+include_once plugin_dir_path(__FILE__) . 'resize-uploaded-images.php';
+include_once plugin_dir_path(__FILE__) . 'disable-comments.php';
+include_once plugin_dir_path(__FILE__) . 'disable-autoupdate-emails.php';
 
 // Settings page content
 function haysky_settings_page()
@@ -76,7 +84,12 @@ function haysky_settings_page()
           <td>
             <label>
               <input type="checkbox" name="haysky_social_share_icons" value="1" <?php checked(1, get_option('haysky_social_share_icons', 0)); ?> />
-              Enable
+              Display after content
+            </label>
+            <br>
+            <label>
+              <input type="checkbox" name="haysky_social_share_icons_before" value="1" <?php checked(1, get_option('haysky_social_share_icons_before', 0)); ?> />
+              Display after title
             </label>
           </td>
         </tr>
@@ -140,6 +153,36 @@ function haysky_settings_page()
               Disable
             </label>
             <p class="description">Disable the admin bar for all users.</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Resize uploaded images</th>
+          <td>
+            <label>
+              <input type="checkbox" name="haysky_resize_uploaded_images" value="1" <?php checked(1, get_option('haysky_resize_uploaded_images', 0)); ?> />
+              Enable
+            </label>
+            <p class="description">Automatically resize uploaded images to a maximum width of 1500px and compress them.</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Disable Comments</th>
+          <td>
+            <label>
+              <input type="checkbox" name="haysky_disable_comments" value="1" <?php checked(1, get_option('haysky_disable_comments', 0)); ?> />
+              Disable
+            </label>
+            <p class="description">Disable comments across the site.</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Disable Auto-update Emails</th>
+          <td>
+            <label>
+              <input type="checkbox" name="haysky_disable_autoupdate_emails" value="1" <?php checked(1, get_option('haysky_disable_autoupdate_emails', 0)); ?> />
+              Disable
+            </label>
+            <p class="description">Disable email notifications for automatic updates.</p>
           </td>
         </tr>
       </table>

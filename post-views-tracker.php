@@ -9,8 +9,8 @@ function pvt_create_tables()
   global $wpdb;
   $charset_collate = $wpdb->get_charset_collate();
 
-  $table_views = $wpdb->prefix . 'post_views';
-  $table_daily = $wpdb->prefix . 'post_views_daily';
+  $table_views = $wpdb->prefix . 'haysky_post_views';
+  $table_daily = $wpdb->prefix . 'haysky_post_views_daily';
 
   require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
@@ -41,8 +41,8 @@ function pvt_track_post_views()
 
   global $post, $wpdb;
   $post_id = $post->ID;
-  $table_views = $wpdb->prefix . 'post_views';
-  $table_daily = $wpdb->prefix . 'post_views_daily';
+  $table_views = $wpdb->prefix . 'haysky_post_views';
+  $table_daily = $wpdb->prefix . 'haysky_post_views_daily';
   $today = current_time('Y-m-d');
 
   // Update total views
@@ -83,8 +83,36 @@ function pvt_render_views_column($column, $post_id)
 {
   if ($column === 'pvt_views') {
     global $wpdb;
-    $table = $wpdb->prefix . 'post_views';
+    $table = $wpdb->prefix . 'haysky_post_views';
     $views = $wpdb->get_var($wpdb->prepare("SELECT views FROM $table WHERE post_id = %d", $post_id));
     echo intval($views);
   }
+}
+
+// Add meta box in post editor
+add_action('add_meta_boxes', 'pvt_add_post_views_meta_box');
+
+function pvt_add_post_views_meta_box()
+{
+  add_meta_box(
+    'pvt_post_views_meta_box',         // ID
+    'Post Views',                      // Title
+    'pvt_render_post_views_meta_box',  // Callback
+    ['post', 'page'],                  // Post types
+    'side',                            // Context
+    'default'                          // Priority
+  );
+}
+
+function pvt_render_post_views_meta_box($post)
+{
+  global $wpdb;
+  $table = $wpdb->prefix . 'haysky_post_views';
+
+  $views = $wpdb->get_var($wpdb->prepare(
+    "SELECT views FROM $table WHERE post_id = %d",
+    $post->ID
+  ));
+
+  echo '<p><strong>Total Views:</strong> ' . intval($views) . '</p>';
 }
