@@ -44,4 +44,28 @@ if (get_option('haysky_disable_comments', 0)) {
   add_action('admin_bar_menu', function ($wp_admin_bar) {
     $wp_admin_bar->remove_node('comments');
   }, 999);
+
+  // Disable REST API comments endpoint
+  add_filter('rest_endpoints', function ($endpoints) {
+    if (isset($endpoints['/wp/v2/comments'])) {
+      unset($endpoints['/wp/v2/comments']);
+    }
+    if (isset($endpoints['/wp/v2/comments/(?P<id>[\d]+)'])) {
+      unset($endpoints['/wp/v2/comments/(?P<id>[\d]+)']);
+    }
+    return $endpoints;
+  });
+
+  // Remove comment feed links from <head>
+  add_action('wp_head', function () {
+    remove_action('wp_head', 'feed_links_extra', 3);
+  }, 1);
+
+  // Disable comment feeds
+  add_action('do_feed_rss2_comments', function () {
+    wp_die(__('Comments are disabled.'), '', ['response' => 403]);
+  }, 1);
+  add_action('do_feed_atom_comments', function () {
+    wp_die(__('Comments are disabled.'), '', ['response' => 403]);
+  }, 1);
 }

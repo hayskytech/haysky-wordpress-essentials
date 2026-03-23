@@ -30,6 +30,7 @@ function haysky_settings()
   register_setting('haysky_settings_group', 'haysky_disable_comments');
   register_setting('haysky_settings_group', 'haysky_disable_autoupdate_emails');
   register_setting('haysky_settings_group', 'haysky_show_active_sessions');
+  register_setting('haysky_settings_group', 'haysky_disable_posts');
 }
 add_action('admin_init', 'haysky_settings');
 
@@ -60,6 +61,7 @@ include_once plugin_dir_path(__FILE__) . 'resize-uploaded-images.php';
 include_once plugin_dir_path(__FILE__) . 'disable-comments.php';
 include_once plugin_dir_path(__FILE__) . 'disable-autoupdate-emails.php';
 include_once plugin_dir_path(__FILE__) . 'active-sessions.php';
+include_once plugin_dir_path(__FILE__) . 'disable-posts.php';
 
 // Settings page content
 function haysky_settings_page()
@@ -185,6 +187,16 @@ function haysky_settings_page()
               Disable
             </label>
             <p class="description">Disable email notifications for automatic updates.</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Disable Posts</th>
+          <td>
+            <label>
+              <input type="checkbox" name="haysky_disable_posts" value="1" <?php checked(1, get_option('haysky_disable_posts', 0)); ?> />
+              Disable
+            </label>
+            <p class="description">Remove the default Posts post type from the admin menu and front-end.</p>
           </td>
         </tr>
         <tr>
