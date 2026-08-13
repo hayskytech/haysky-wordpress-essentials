@@ -31,6 +31,8 @@ function haysky_settings()
   register_setting('haysky_settings_group', 'haysky_disable_autoupdate_emails');
   register_setting('haysky_settings_group', 'haysky_show_active_sessions');
   register_setting('haysky_settings_group', 'haysky_disable_posts');
+  register_setting('haysky_settings_group', 'haysky_enable_news_cpt');
+  register_setting('haysky_settings_group', 'haysky_restrict_editor_pages');
 }
 add_action('admin_init', 'haysky_settings');
 
@@ -62,6 +64,8 @@ include_once plugin_dir_path(__FILE__) . 'disable-comments.php';
 include_once plugin_dir_path(__FILE__) . 'disable-autoupdate-emails.php';
 include_once plugin_dir_path(__FILE__) . 'active-sessions.php';
 include_once plugin_dir_path(__FILE__) . 'disable-posts.php';
+include_once plugin_dir_path(__FILE__) . 'news-cpt.php';
+include_once plugin_dir_path(__FILE__) . 'restrict-editor-pages.php';
 
 // Settings page content
 function haysky_settings_page()
@@ -197,6 +201,26 @@ function haysky_settings_page()
               Disable
             </label>
             <p class="description">Remove the default Posts post type from the admin menu and front-end.</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Enable News CPT</th>
+          <td>
+            <label>
+              <input type="checkbox" name="haysky_enable_news_cpt" value="1" <?php checked(1, get_option('haysky_enable_news_cpt', 0)); ?> />
+              Enable
+            </label>
+            <p class="description">Register a custom post type "News" with support for categories, tags, featured image, and all standard post features.</p>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Restrict Editors from Pages</th>
+          <td>
+            <label>
+              <input type="checkbox" name="haysky_restrict_editor_pages" value="1" <?php checked(1, get_option('haysky_restrict_editor_pages', 0)); ?> />
+              Enable
+            </label>
+            <p class="description">Prevent users with the Editor role from viewing, creating, or editing pages.</p>
           </td>
         </tr>
         <tr>
